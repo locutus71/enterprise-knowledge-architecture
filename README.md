@@ -2,7 +2,7 @@
 
 A self-improving knowledge architecture for AI agents. 3 memory layers, hybrid search, automated validation, multi-LLM orchestration. No framework, no vendor lock-in. SQLite, Python, open-source models.
 
-**Paper:** [Epistemic Validation in AI Knowledge Systems](https://zenodo.org/records/) (Zenodo, 2026)
+**Paper:** [Epistemic Validation in AI Knowledge Systems](https://zenodo.org/records/19357818) (Zenodo, 2026) — DOI: 10.5281/zenodo.19357818
 
 ## Architecture Overview
 
