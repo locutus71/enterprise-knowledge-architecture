@@ -1,0 +1,1419 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enterprise Knowledge Architecture — Holger Wölfle</title>
+<style>
+:root {
+  --primary: #1a1a2e;
+  --secondary: #16213e;
+  --accent: #0f3460;
+  --highlight: #e94560;
+  --orange: #f4845f;
+  --green: #4ecca3;
+  --blue: #7ec8e3;
+  --purple: #b088f9;
+  --yellow: #f9d56e;
+  --text: #eaeaea;
+  --text-muted: #a0a0b0;
+  --card-bg: #1e1e30;
+  --border: #2a2a40;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--primary);
+  color: var(--text);
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* Hero */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 2rem;
+  background: linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 40%, #16213e 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at 30% 50%, rgba(78, 204, 163, 0.05) 0%, transparent 50%),
+              radial-gradient(circle at 70% 50%, rgba(233, 69, 96, 0.05) 0%, transparent 50%);
+  animation: pulse 8s ease-in-out infinite alternate;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 0.5; }
+  100% { transform: scale(1.1); opacity: 1; }
+}
+
+.hero h1 {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 800;
+  letter-spacing: -1px;
+  margin-bottom: 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.hero h1 span { color: var(--green); }
+
+.hero .subtitle {
+  font-size: clamp(1rem, 2.5vw, 1.4rem);
+  color: var(--text-muted);
+  max-width: 700px;
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.hero .author {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  position: relative;
+  z-index: 1;
+  border-top: 1px solid var(--border);
+  padding-top: 1.5rem;
+  margin-top: 1rem;
+}
+
+.hero .author strong { color: var(--green); }
+
+.hero .scroll-hint {
+  position: absolute;
+  bottom: 2rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(8px); }
+}
+
+/* Navigation */
+.nav {
+  position: sticky;
+  top: 0;
+  background: rgba(26, 26, 46, 0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+  z-index: 100;
+  padding: 0.75rem 2rem;
+  display: flex;
+  gap: 1.5rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.nav::-webkit-scrollbar { display: none; }
+
+.nav a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  transition: color 0.2s;
+}
+
+.nav a:hover { color: var(--green); }
+
+/* Sections */
+section {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 5rem 2rem;
+}
+
+section h2 {
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--text);
+}
+
+section h2 span { color: var(--green); }
+
+.section-intro {
+  color: var(--text-muted);
+  font-size: 1.05rem;
+  margin-bottom: 3rem;
+  max-width: 750px;
+}
+
+section h3 {
+  font-size: 1.2rem;
+  margin: 2rem 0 1rem;
+  color: var(--blue);
+}
+
+/* Cards */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  border-color: var(--green);
+}
+
+.card .icon {
+  font-size: 1.8rem;
+  margin-bottom: 0.75rem;
+}
+
+.card h4 {
+  font-size: 1.05rem;
+  margin-bottom: 0.5rem;
+}
+
+.card p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.card .tag {
+  display: inline-block;
+  background: rgba(78, 204, 163, 0.15);
+  color: var(--green);
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.card .tag.orange {
+  background: rgba(244, 132, 95, 0.15);
+  color: var(--orange);
+}
+
+.card .tag.purple {
+  background: rgba(176, 136, 249, 0.15);
+  color: var(--purple);
+}
+
+.card .tag.blue {
+  background: rgba(126, 200, 227, 0.15);
+  color: var(--blue);
+}
+
+/* Architecture Diagram */
+.arch-diagram {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 2rem;
+  margin: 2rem 0;
+  overflow-x: auto;
+}
+
+.layer-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.layer {
+  padding: 1.5rem 2rem;
+  border: 2px solid;
+  text-align: center;
+  position: relative;
+}
+
+.layer:first-child { border-radius: 12px 12px 0 0; }
+.layer:last-child { border-radius: 0 0 12px 12px; }
+
+.layer .layer-name {
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 0.3rem;
+}
+
+.layer .layer-detail {
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+.layer .layer-speed {
+  position: absolute;
+  right: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.layer-hot {
+  background: rgba(233, 69, 96, 0.12);
+  border-color: var(--highlight);
+  color: #ff8a9e;
+}
+
+.layer-deep {
+  background: rgba(244, 132, 95, 0.12);
+  border-color: var(--orange);
+  color: #f9b89a;
+}
+
+.layer-search {
+  background: rgba(126, 200, 227, 0.12);
+  border-color: var(--blue);
+  color: #a8d8ea;
+}
+
+.layer-connector {
+  width: 2px;
+  height: 20px;
+  background: var(--border);
+  margin: 0 auto;
+}
+
+/* Flow Diagram */
+.flow {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 2rem 0;
+}
+
+.flow-step {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  text-align: center;
+  min-width: 130px;
+  max-width: 160px;
+}
+
+.flow-step .step-icon { font-size: 1.5rem; margin-bottom: 0.4rem; }
+.flow-step .step-name { font-size: 0.85rem; font-weight: 600; }
+.flow-step .step-detail { font-size: 0.75rem; color: var(--text-muted); }
+
+.flow-arrow {
+  font-size: 1.2rem;
+  color: var(--green);
+  padding: 0 0.3rem;
+}
+
+/* Comparison Table */
+.comparison {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 2rem 0;
+  font-size: 0.9rem;
+}
+
+.comparison th {
+  background: var(--accent);
+  padding: 0.8rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 2px solid var(--green);
+}
+
+.comparison td {
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.comparison tr:hover { background: rgba(78, 204, 163, 0.05); }
+
+.comparison .winner { color: var(--green); font-weight: 600; }
+.comparison .neutral { color: var(--text-muted); }
+
+/* Metric Bars */
+.metric-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0.75rem 0;
+}
+
+.metric-label {
+  width: 160px;
+  font-size: 0.85rem;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.metric-bar-bg {
+  flex: 1;
+  height: 28px;
+  background: var(--secondary);
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+
+.metric-bar {
+  height: 100%;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  padding-left: 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: width 1s ease-out;
+}
+
+/* Pipeline */
+.pipeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 2rem 0;
+}
+
+.gate {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem 1.2rem;
+  transition: border-color 0.2s;
+}
+
+.gate:hover { border-color: var(--green); }
+
+.gate-number {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.gate-pass { background: rgba(78, 204, 163, 0.2); color: var(--green); }
+.gate-warn { background: rgba(249, 213, 110, 0.2); color: var(--yellow); }
+.gate-block { background: rgba(233, 69, 96, 0.2); color: var(--highlight); }
+
+.gate-content h4 { font-size: 0.95rem; margin-bottom: 0.2rem; }
+.gate-content p { font-size: 0.82rem; color: var(--text-muted); }
+
+/* Quote */
+.quote-box {
+  border-left: 3px solid var(--green);
+  background: var(--card-bg);
+  padding: 1.5rem 2rem;
+  margin: 2rem 0;
+  border-radius: 0 8px 8px 0;
+}
+
+.quote-box .quote-text {
+  font-style: italic;
+  font-size: 1.05rem;
+  margin-bottom: 0.5rem;
+}
+
+.quote-box .quote-source {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* Lessons */
+.lesson {
+  display: flex;
+  gap: 1rem;
+  margin: 1.5rem 0;
+  align-items: flex-start;
+}
+
+.lesson-icon {
+  font-size: 1.3rem;
+  flex-shrink: 0;
+  margin-top: 0.2rem;
+}
+
+.lesson-content h4 { font-size: 0.95rem; margin-bottom: 0.3rem; }
+.lesson-content p { font-size: 0.88rem; color: var(--text-muted); }
+
+/* Code blocks */
+.code-block {
+  background: #0d0d1a;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.2rem 1.5rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  line-height: 1.5;
+}
+
+.code-block .comment { color: #5a6a7a; }
+.code-block .keyword { color: var(--purple); }
+.code-block .string { color: var(--green); }
+.code-block .number { color: var(--orange); }
+
+/* Ring Diagram */
+.ring-container {
+  display: flex;
+  justify-content: center;
+  margin: 2rem 0;
+}
+
+.ring {
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  border: 3px solid var(--green);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ring-center {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: var(--card-bg);
+  border: 2px solid var(--green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-align: center;
+  z-index: 2;
+}
+
+.ring-item {
+  position: absolute;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.5rem 0.8rem;
+  font-size: 0.75rem;
+  text-align: center;
+  width: 110px;
+  z-index: 3;
+}
+
+.ring-item.pos-top { top: -15px; }
+.ring-item.pos-right { right: -40px; top: 50%; transform: translateY(-50%); }
+.ring-item.pos-bottom { bottom: -15px; }
+.ring-item.pos-left { left: -40px; top: 50%; transform: translateY(-50%); }
+.ring-item.pos-tr { top: 20px; right: -10px; }
+.ring-item.pos-bl { bottom: 20px; left: -10px; }
+
+/* Scope Diagram */
+.scope-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.scope-box {
+  background: var(--card-bg);
+  border: 2px solid;
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.scope-box h4 { margin-bottom: 0.5rem; }
+.scope-box p { font-size: 0.85rem; color: var(--text-muted); }
+.scope-box .scope-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+
+.scope-work { border-color: var(--blue); }
+.scope-private { border-color: var(--purple); }
+.scope-coach { border-color: var(--green); }
+
+.scope-bridge {
+  grid-column: 1 / -1;
+  background: rgba(78, 204, 163, 0.08);
+  border: 1px dashed var(--green);
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--green);
+}
+
+/* Challenge Grid */
+.challenge-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.challenge {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  border-left: 4px solid;
+}
+
+.challenge.crit-high { border-left-color: var(--highlight); }
+.challenge.crit-med { border-left-color: var(--yellow); }
+.challenge.crit-low { border-left-color: var(--green); }
+
+.challenge h4 { font-size: 0.95rem; margin-bottom: 0.4rem; }
+.challenge p { font-size: 0.85rem; color: var(--text-muted); }
+.challenge .crit-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 0.5rem;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 4rem 2rem;
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+footer a { color: var(--green); text-decoration: none; }
+footer a:hover { text-decoration: underline; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .flow { flex-direction: column; }
+  .flow-arrow { transform: rotate(90deg); }
+  .metric-row { flex-direction: column; align-items: stretch; }
+  .metric-label { width: auto; text-align: left; }
+  .scope-grid { grid-template-columns: 1fr; }
+  .layer .layer-speed { position: static; display: block; margin-top: 0.3rem; }
+}
+
+/* Separator */
+.sep {
+  width: 60px;
+  height: 3px;
+  background: var(--green);
+  margin: 0.75rem 0 2rem;
+  border-radius: 2px;
+}
+
+/* Inline highlight */
+.hl { color: var(--green); font-weight: 600; }
+.hl-orange { color: var(--orange); font-weight: 600; }
+.hl-blue { color: var(--blue); font-weight: 600; }
+.hl-purple { color: var(--purple); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>Enterprise <span>Knowledge Architecture</span></h1>
+  <p class="subtitle">
+    Wie ein KI-System sich selbst schlauer macht, Wissen in drei Schichten speichert
+    und Qualität automatisch sichert. Kein Framework, kein Vendor Lock-in.
+    SQLite, Python, Open-Source-Modelle.
+  </p>
+  <p class="author">
+    <strong>Holger Wölfle</strong><br>
+    Privates Forschungsprojekt, 2025–2026
+  </p>
+  <div class="scroll-hint">&#8595; Scroll für den Deep Dive</div>
+</div>
+
+<!-- NAVIGATION -->
+<nav class="nav" id="nav">
+  <a href="#problem">Das Problem</a>
+  <a href="#overview">Überblick</a>
+  <a href="#memory">3-Layer Memory</a>
+  <a href="#search">Hybrid Search</a>
+  <a href="#hooks">Hook System</a>
+  <a href="#validation">Validation</a>
+  <a href="#orchestration">Multi-LLM</a>
+  <a href="#agents">Agents</a>
+  <a href="#loop">Knowledge Loop</a>
+  <a href="#scope">Scope Isolation</a>
+  <a href="#lessons">Lessons Learned</a>
+  <a href="#challenges">Challenges</a>
+</nav>
+
+<!-- 1. DAS PROBLEM -->
+<section id="problem">
+  <h2>Das <span>Problem</span></h2>
+  <div class="sep"></div>
+  <p class="section-intro">
+    Jedes KI-System vergisst. Jede neue Session startet bei null.
+    Kontext geht verloren, Fehler wiederholen sich, Wissen zerfällt.
+    Die Frage ist nicht ob man ein Memory-System braucht, sondern wie man eins baut,
+    das sich selbst verbessert.
+  </p>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="icon">🧠</div>
+      <h4>Context-Amnesie</h4>
+      <p>LLMs haben ein begrenztes Kontextfenster. Nach 200k Tokens wird komprimiert oder abgeschnitten. Alles was vorher war: weg.</p>
+      <span class="tag orange">Jede Session betroffen</span>
+    </div>
+    <div class="card">
+      <div class="icon">🔄</div>
+      <h4>Wiederholungsfehler</h4>
+      <p>Ohne persistentes Gedächtnis macht das System denselben Fehler dreimal. Derselbe Workaround, derselbe Debugging-Pfad, dasselbe Ergebnis.</p>
+      <span class="tag orange">Produktivitätskiller</span>
+    </div>
+    <div class="card">
+      <div class="icon">📉</div>
+      <h4>Wissensverfall</h4>
+      <p>Recherche-Ergebnisse von letzter Woche? Nicht mehr da. Entscheidungsgrundlagen von letztem Monat? Verloren. Das System wird nicht schlauer, es bleibt gleich.</p>
+      <span class="tag orange">Kein Compound Effect</span>
+    </div>
+  </div>
+
+  <div class="quote-box">
+    <p class="quote-text">"Die Hälfte meiner Annahmen über KI-Memory war falsch. Ich dachte, ein Vector Store löst alles. Tut er nicht."</p>
+    <p class="quote-source">Erkenntnis nach 6 Monaten Entwicklung</p>
+  </div>
+</section>
+
+<!-- 2. ÜBERBLICK -->
+<section id="overview">
+  <h2>System-<span>Überblick</span></h2>
+  <div class="sep"></div>
+  <p class="section-intro">
+    Fünf Systeme, die ineinandergreifen. Keins funktioniert isoliert.
+    Die Architektur ist das Produkt, nicht die einzelne Komponente.
+  </p>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="icon">💾</div>
+      <h4>3-Layer Memory</h4>
+      <p>Hot Memory für Echtzeit-Fakten, Deep Storage für destilliertes Wissen, Semantic Search über alle Dokumente.</p>
+      <span class="tag">Kern-Architektur</span>
+    </div>
+    <div class="card">
+      <div class="icon">🔍</div>
+      <h4>Hybrid Search</h4>
+      <p>Vector Search allein reicht nicht. BM25 für exakte Begriffe, Embedding für Bedeutung, Temporal Decay für Aktualität.</p>
+      <span class="tag blue">Relevanz-Engine</span>
+    </div>
+    <div class="card">
+      <div class="icon">🪝</div>
+      <h4>Hook System</h4>
+      <p>Automatisierte Trigger bei Session-Start, vor Tool-Aufrufen, vor Komprimierung, bei Session-Ende. Das Betriebssystem des Ganzen.</p>
+      <span class="tag purple">Automatisierung</span>
+    </div>
+    <div class="card">
+      <div class="icon">✅</div>
+      <h4>Validation Layer</h4>
+      <p>Zero Trust auf Agent-Wissen. 6 Gates die jede Information passieren muss bevor sie persistent wird. Kein blindes Vertrauen.</p>
+      <span class="tag orange">Qualitätssicherung</span>
+    </div>
+    <div class="card">
+      <div class="icon">🤖</div>
+      <h4>Multi-LLM Orchestrierung</h4>
+      <p>Nicht ein Modell für alles, sondern das richtige Modell für die richtige Aufgabe. Cloud für Komplexes, lokal für Schnelles.</p>
+      <span class="tag">Routing</span>
+    </div>
+    <div class="card">
+      <div class="icon">🔁</div>
+      <h4>Knowledge Loop</h4>
+      <p>Der Mechanismus der das System mit jeder Session besser macht. Destillation, Export, Reindex, Feedback. Kein statisches System.</p>
+      <span class="tag">Self-Improving</span>
+    </div>
+  </div>
+</section>
+
+<!-- 3. 3-LAYER MEMORY -->
+<section id="memory">
+  <h2>3-Layer <span>Memory</span></h2>
+  <div class="sep"></div>
+  <p class="section-intro">
+    Drei Speicherschichten mit unterschiedlichen Geschwindigkeiten, Kapazitäten und Aufgaben.
+    Wie L1/L2/L3-Cache in einer CPU, aber für Wissen.
+  </p>
+
+  <div class="arch-diagram">
+    <div class="layer-stack">
+      <div class="layer layer-hot">
+        <div class="layer-name">Layer 1: Hot Memory</div>
+        <div class="layer-detail">Strukturierte Key-Value-Fakten · Sofort verfügbar · Automatisch injiziert</div>
+        <div class="layer-speed">&lt;1ms</div>
+      </div>
+      <div class="layer layer-deep">
+        <div class="layer-name">Layer 2: Deep Storage</div>
+        <div class="layer-detail">Destilliertes Wissen · Recherchen, Entscheidungen, Fehler · FTS5-Volltext</div>
+        <div class="layer-speed">~10ms</div>
+      </div>
+      <div class="layer layer-search">
+        <div class="layer-name">Layer 3: Semantic Search</div>
+        <div class="layer-detail">Hybrid Search über alle Dokumente · Vector + BM25 · Temporal Decay</div>
+        <div class="layer-speed">~100ms</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-grid">
+    <div class="card">
+      <h4>Layer 1: Hot Memory</h4>
+      <p>Key-Value-Store für aktuelle Zustands-Fakten. IP-Adressen, Projektstatus, Stakeholder-Rollen. Wird bei jedem Session-Start automatisch in den Kontext geladen. Keine Suche nötig, immer da.</p>
+      <div class="code-block">
+        <span class="comment"># Beispiel Hot Memory Einträge</span><br>
+        <span class="keyword">sandbox_status</span> = <span class="string">"noch nicht eingereicht"</span><br>
+        <span class="keyword">ki_budget_phase1</span> = <span class="number">55</span> <span class="comment"># EUR/Monat</span><br>
+        <span class="keyword">naechster_termin</span> = <span class="string">"2026-03-27 JF"</span>
+      </div>
+      <span class="tag orange">Immer geladen · Kein Query nötig</span>
+    </div>
+    <div class="card">
+      <h4>Layer 2: Deep Storage</h4>
+      <p>SQLite-Datenbank mit 8 Tabellen. Notes, Logs, Snippets, Configs, Relationen, Changelog. FTS5-Volltextsuche. Hier landet alles was aus Sessions destilliert wird: Erkenntnisse, Debugging-Lösungen, strategische Entscheidungen.</p>
+      <div class="code-block">
+        <span class="comment"># Typische Queries</span><br>
+        <span class="keyword">search</span> <span class="string">"Hybrid Search Konfiguration"</span><br>
+        <span class="keyword">list</span> --type note --project <span class="string">"Architektur"</span><br>
+        <span class="keyword">add note</span> --title <span class="string">"Temporal Decay Formel"</span>
+      </div>
+      <span class="tag">Strukturiert · Durchsuchbar · Versioniert</span>
+    </div>
+    <div class="card" style="grid-column: 1 / -1;">
+      <h4>Layer 3: Semantic Search</h4>
+      <p>Hybrid Search Engine über alle Projektdokumente. Kombiniert Vector-Embeddings (multilingual-e5-base, 768 Dimensionen) mit BM25-Keyword-Search. Temporal Decay sorgt dafür, dass aktuelle Dokumente bevorzugt werden. 25.000+ Chunks aus 400+ Dateien indexiert.</p>
+      <div style="display: flex; gap: 2rem; flex-wrap: wrap; margin-top: 1rem;">
+        <div>
+          <strong style="color: var(--blue);">Vector Search (70%)</strong><br>
+          <span style="font-size: 0.85rem; color: var(--text-muted);">Versteht Bedeutung. "Kostenanalyse" findet auch "Budget-Vergleich".</span>
+        </div>
+        <div>
+          <strong style="color: var(--orange);">BM25 Search (30%)</strong><br>
+          <span style="font-size: 0.85rem; color: var(--text-muted);">Exakte Begriffe. "BM25-IDF" findet genau das, nicht Synonyme.</span>
+        </div>
+        <div>
+          <strong style="color: var(--green);">Phrase Bonus</strong><br>
+          <span style="font-size: 0.85rem; color: var(--text-muted);">Zusammenhängende Begriffe werden hochgewertet. Keine Wort-Suppe.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="quote-box">
+    <p class="quote-text">"Der Fehler den alle machen: Ein Vector Store für alles. Das ist wie wenn du dein Telefon, deinen Kalender und dein Archiv in eine einzige Schublade wirfst."</p>
+    <p class="quote-source">Architektur-Entscheidung nach 3 gescheiterten Prototypen</p>
+  </div>
+</section>
+
+<!-- 4. HYBRID SEARCH -->
+<section id="search">
+  <h2>Hybrid <span>Search</span></h2>
+  <div class="sep"></div>
+  <p class="section-intro">
+    Pure Vector Search klingt elegant, funktioniert aber nicht für Enterprise-Wissen.
+    Fachbegriffe, Abkürzungen, exakte Formulierungen gehen verloren.
+    Die Lösung: Zwei Suchverfahren kombiniert, gewichtet, mit Zeitfaktor.
+  </p>
+
+  <table class="comparison">
+    <thead>
+      <tr>
+        <th>Kriterium</th>
+        <th>Pure Vector</th>
+        <th>Pure BM25</th>
+        <th>Hybrid (diese Architektur)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Semantisches Verständnis</td>
+        <td class="winner">Stark</td>
+        <td class="neutral">Keins</td>
+        <td class="winner">Stark (via Vector-Anteil)</td>
+      </tr>
+      <tr>
+        <td>Exakte Fachbegriffe</td>
+        <td class="neutral">Schwach</td>
+        <td class="winner">Stark</td>
+        <td class="winner">Stark (via BM25-Anteil)</td>
+      </tr>
+      <tr>
+        <td>Multilinguale Suche</td>
+        <td class="winner">Ja (e5-base)</td>
+        <td class="neutral">Nein</td>
+        <td class="winner">Ja</td>
+      </tr>
+      <tr>
+        <td>Aktualität beachten</td>
+        <td class="neutral">Nein</td>
+        <td class="neutral">Nein</td>
+        <td class="winner">Ja (Temporal Decay)</td>
+      </tr>
+      <tr>
+        <td>Phrase-Awareness</td>
+        <td class="neutral">Begrenzt</td>
+        <td class="neutral">Nein</td>
+        <td class="winner">Ja (Phrase Bonus)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Temporal Decay</h3>
+  <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+    Nicht jedes Dokument altert gleich. Ein Strategiepapier von letzter Woche ist relevanter als eins von vor 6 Monaten.
+    Aber eine Grundsatzentscheidung bleibt immer relevant.
+  </p>
+
+  <div class="card-grid">
+    <div class="card">
+      <h4>Exponentieller Decay</h4>
+      <div class="code-block">
+        <span class="keyword">score</span> = relevance × <span class="keyword">e</span><sup>(-λ × age_days)</sup><br>
+        <span class="comment"># Halbwertszeit: 90 Tage</span><br>
+        <span class="comment"># Nach 90 Tagen: 50% Gewicht</span><br>
+        <span class="comment"># Nach 180 Tagen: 25% Gewicht</span><br>
+        <span class="comment"># Nach 360 Tagen: 6% Gewicht</span>
+      </div>
+    </div>
+    <div class="card">
+      <h4>Evergreen-Ausnahmen</h4>
+      <p>Bestimmte Dokumenttypen sind zeitlos und werden vom Decay ausgenommen:</p>
+      <ul style="margin-top: 0.5rem; padding-left: 1.2rem; color: var(--text-muted); font-size: 0.9rem;">
+        <li>Grundsatzentscheidungen</li>
+        <li>Architektur-Dokumentation</li>
+        <li>Corporate Design Regeln</li>
+        <li>Organisationsstrukturen</li>
+      </ul>
+      <span class="tag">Kein Decay · Immer 100%</span>
+    </div>
+  </div>
+</section>
+
+<!-- 5. HOOK SYSTEM -->
+<section id="hooks">
+  <h2>Hook <span>System</span></h2>
+  <div class="sep"></div>
+  <p class="section-intro">
+    Hooks sind automatisierte Trigger die bei bestimmten Events feuern.
+    Sie machen aus einer passiven Chat-Session ein aktives Betriebssystem.
+    Kein manuelles "Bitte lade den Kontext", kein "Vergiss nicht zu speichern".
+  </p>
+
+  <div class="flow">
+    <div class="flow-step" style="border-color: var(--green);">
+      <div class="step-icon">🟢</div>
+      <div class="step-name">Session Start</div>
+      <div class="step-detail">Kontext laden, Fakten injizieren, Ziele prüfen</div>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step" style="border-color: var(--yellow);">
+      <div class="step-icon">🕐</div>
+      <div class="step-name">User Prompt</div>
+      <div class="step-detail">Timestamp injizieren, Zeitabstände tracken</div>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step" style="border-color: var(--blue);">
+      <div class="step-icon">🔧</div>
+      <div class="step-name">Pre-Tool</div>
+      <div class="step-detail">Email-Guard, Delete-Block, Safety Checks</div>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step" style="border-color: var(--orange);">
+      <div class="step-icon">🔄</div>
+      <div class="step-name">Pre-Compact</div>
+      <div class="step-detail">Wissen sichern bevor Kontext komprimiert wird</div>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step" style="border-color: var(--purple);">
+      <div class="step-icon">🛑</div>
+      <div class="step-name">Session Stop</div>
+      <div class="step-detail">Export, Reindex triggern, Log schreiben</div>
+    </div>
+  </div>
+
+  <div class="card-grid">
+    <div class="card">
+      <h4>Session Start Hook</h4>
+      <p>Lädt bei jedem Gespräch automatisch: Hot Memory Fakten, aktuelle Ziele, offene Fehler (Buglist), Statistiken aus Deep Storage. Der Agent startet nie bei null.</p>
+      <span class="tag">Automatisch · Keine manuelle Aktion</span>
+    </div>
+    <div class="card">
+      <h4>User Prompt Hook</h4>
+      <p>Jede Nachricht des Users bekommt automatisch einen Timestamp mit Wochentag und Uhrzeit. Der Agent kann Zeitabstände berechnen, Arbeitsrhythmen erkennen, exakte Uhrzeiten in Logs dokumentieren. Grundlage fuer zeitbasiertes Coaching.</p>
+      <span class="tag">Zeitbewusstsein · Muster-Erkennung</span>
+    </div>
+    <div class="card">
+      <h4>Pre-Tool Hooks</h4>
+      <p>Fangen ab bevor etwas passiert. Email-Versand ohne Freigabe? Blockiert. Datei löschen? Blockiert. Destruktive Git-Operationen? Warnung. Policy as Code.</p>
+      <span class="tag orange">Safety Layer · Kein Undo nötig</span>
+    </div>
+    <div class="card">
+      <h4>Pre-Compact Hook</h4>
+      <p>Wenn das Kontextfenster voll wird, komprimiert das System automatisch. Vorher: Alles Wichtige wird in Deep Storage geschrieben. Kein Wissensverlust durch Komprimierung.</p>
+      <span class="tag purple">Focus Loop Pattern</span>
+    </div>
+    <div class="card">
+      <h4>Session Stop Hook</h4>
+      <p>Bei Session-Ende: Zusammenfassung schreiben, Wissen exportieren, Reindex der Search Engine triggern. Die nächste Session profitiert automatisch.</p>
+      <span class="tag blue">Knowledge Capture</span>
+    </div>
+  </div>
+
+  <div class="quote-box">
+    <p class="quote-text">"Hooks sind der Unterschied zwischen einem Chat-Tool und einem System. Ein Chat-Tool antwortet. Ein System denkt mit, auch wenn du nicht fragst."</p>
+  </div>
+</section>
+
+<!-- 6. VALIDATION LAYER -->
+<section id="validation">
+  <h2>Validation <span>Layer</span></h2>
+  <div class="sep"></div>
+  <p class="section-intro">
+    Zero Trust auf Agent-Wissen. Jede Information die persistent wird, muss 6 Gates passieren.
+    Weil falsches Wissen mit vollem Gewicht gespeichert wird, wenn man es nicht validiert.
+  </p>
+
+  <div class="pipeline">
+    <div class="gate">
+      <div class="gate-number gate-pass">1</div>
+      <div class="gate-content">
+        <h4>Source Pinning</h4>
+        <p>Jeder Fakt braucht eine nachprüfbare Quelle. Kein "laut verschiedenen Quellen". Konkrete URL, Datei, oder Zitat.</p>
+      </div>
+    </div>
+    <div class="gate">
+      <div class="gate-number gate-pass">2</div>
+      <div class="gate-content">
+        <h4>Existence Check</h4>
+        <p>Bevor eine Funktion, Datei oder API empfohlen wird: Existiert sie noch? Simpler String-Match, kein LLM nötig. Verhindert Halluzinationen über gelöschte Ressourcen.</p>
+      </div>
+    </div>
+    <div class="gate">
+      <div class="gate-number gate-warn">3</div>
+      <div class="gate-content">
+        <h4>Keyword Cross-Check</h4>
+        <p>Stimmen die Fachbegriffe? Heisst es "Betriebsvereinbarung" oder "Betriebsverordnung"? Ein falscher Begriff in einem Governance-Dokument kann fatale Folgen haben.</p>
+      </div>
+    </div>
+    <div class="gate">
+      <div class="gate-number gate-warn">4</div>
+      <div class="gate-content">
+        <h4>Contradiction Check</h4>
+        <p>Widerspricht die neue Information bestehenden Fakten im Hot Memory oder Deep Storage? Wenn ja: Nicht überschreiben, sondern flaggen.</p>
+      </div>
+    </div>
+    <div class="gate">
+      <div class="gate-number gate-block">5</div>
+      <div class="gate-content">
+        <h4>Confidence Score</h4>
+        <p>Wie sicher ist die Quelle? Verifiziert (Primärquelle) > Agent-generiert (LLM-Output) > Inferiert (Schlussfolgerung). Niedrige Confidence = Review erforderlich.</p>
+      </div>
+    </div>
+    <div class="gate">
+      <div class="gate-number gate-block">6</div>
+      <div class="gate-content">
+        <h4>Export Filter</h4>
+        <p>Beim Export aus Deep Storage in die Search Engine: Rejected Notes werden gefiltert, veraltete Einträge markiert, Duplikate entfernt.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 7. MULTI-LLM ORCHESTRATION -->
+<section id="orchestration">
+  <h2>Multi-LLM <span>Orchestrierung</span></h2>
+  <div class="sep"></div>
+  <p class="section-intro">
+    Nicht ein Modell für alles. Verschiedene Aufgaben brauchen verschiedene Stärken.
+    Ein lokales 3B-Modell klassifiziert schneller als ein Cloud-API-Call.
+    Aber für strategische Analyse braucht man die grossen Modelle.
+  </p>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="icon">🏠</div>
+      <h4>Lokal (On-Premise)</h4>
+      <p>Kleine, schnelle Modelle für Klassifikation, Routing, einfache Textverarbeitung. Keine API-Kosten, keine Latenz, volle Datenkontrolle.</p>
+      <div class="code-block">
+        <span class="comment"># Lokales Modell</span><br>
+        <span class="keyword">qwen2.5:3b</span> via Ollama<br>
+        <span class="comment"># Aufgaben: Klassifikation, Routing,</span><br>
+        <span class="comment"># Embedding-Vorbereitung</span>
+      </div>
+      <span class="tag">0 € · Volle Kontrolle</span>
+    </div>
+    <div class="card">
+      <div class="icon">☁️</div>
+      <h4>Cloud (API)</h4>
+      <p>Grosse Modelle für komplexe Aufgaben. Strategieberatung, Code-Generierung, Analyse langer Dokumente. Verschiedene Anbieter je nach Stärke.</p>
+      <div class="code-block">
+        <span class="keyword">Claude Opus</span>  → Komplexe Implementierung<br>
+        <span class="keyword">Claude Sonnet</span> → Recherche, Sub-Agents<br>
+        <span class="keyword">GPT-4</span>         → Alternative Perspektive<br>
+        <span class="keyword">Gemini</span>        → Grosse Kontextfenster<br>
+        <span class="keyword">Perplexity</span>    → Web-Recherche<br>
+        <span class="keyword">Grok</span>          → Echtzeit-Informationen
+      </div>
+      <span class="tag blue">Best-of-Breed · Kein Vendor Lock</span>
+    </div>
+  </div>
+
+  <h3>Auto-Router</h3>
+  <p style="color: var(--text-muted); margin-bottom: 1rem;">
+    Der Router entscheidet automatisch: Lokal oder Cloud? Welches Cloud-Modell?
+    Basierend auf Aufgaben-Komplexität, Daten-Sensitivität und Kosten.
+  </p>
+
+  <div class="flow">
+    <div class="flow-step">
+      <div class="step-icon">📥</div>
+      <div class="step-name">Aufgabe</div>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step" style="border-color: var(--yellow);">
+      <div class="step-icon">⚖️</div>
+      <div class="step-name">Router</div>
+      <div class="step-detail">Komplexität? Sensitivität? Kosten?</div>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step" style="border-color: var(--green);">
+      <div class="step-icon">🏠</div>
+      <div class="step-name">Lokal</div>
+      <div class="step-detail">Einfach, schnell, sensitiv</div>
+    </div>
+  </div>
+  <div class="flow" style="margin-top: 0;">
+    <div style="width: 130px;"></div>
+    <span class="flow-arrow" style="visibility: hidden;">→</span>
+    <div style="width: 160px;"></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step" style="border-color: var(--blue);">
+      <div class="step-icon">☁️</div>
+      <div class="step-name">Cloud</div>
+      <div class="step-detail">Komplex, kreativ, analytisch</div>
+    </div>
+  </div>
+
+  <h3>Cross-LLM Benchmarking</h3>
+  <p style="color: var(--text-muted);">
+    Kritische Entscheidungen werden über mehrere Modelle validiert.
+    Nicht "was sagt Claude?", sondern "stimmen Claude, GPT und Gemini überein?".
+    Divergenzen werden als Signal genutzt, nicht als Problem.
+  </p>
+</section>
+
+<!-- 8. AGENT FRAMEWORK -->
+<section id="agents">
+  <h2>Agent <span>Framework</span></h2>
+  <div class="sep"></div>
+  <p class="section-intro">
+    Spezialisierte Agents für verschiedene Aufgaben.
+    Nicht ein Agent der alles kann, sondern ein Team das zusammenarbeitet.
+    Mit eingebautem Quality Gate: 3-von-3-Prüfung.
+  </p>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="icon">🔬</div>
+      <h4>Analyse-Agent</h4>
+      <p>Durchsucht Dokumente, extrahiert Fakten, erstellt strukturierte Zusammenfassungen. Schnell und präzise.</p>
+      <span class="tag">Recherche · Extraktion</span>
+    </div>
+    <div class="card">
+      <div class="icon">🎯</div>
+      <h4>Strategie-Agent</h4>
+      <p>Bewertet Optionen, erstellt Entscheidungsvorlagen, identifiziert Risiken und Chancen. Langfristiges Denken.</p>
+      <span class="tag purple">Planung · Bewertung</span>
+    </div>
+    <div class="card">
+      <div class="icon">🔴</div>
+      <h4>Kritik-Agent</h4>
+      <p>Sucht aktiv nach Schwachstellen, logischen Fehlern, fehlenden Perspektiven. Der Advocatus Diaboli im System.</p>
+      <span class="tag orange">Gegenprüfung · Red Team</span>
+    </div>
+    <div class="card">
+      <div class="icon">✅</div>
+      <h4>QA-Agent</h4>
+      <p>Prüft Ausgaben auf Fakten-Treue, Konsistenz, Format-Konformität. Drei identische Prüfungen, alle drei müssen bestehen.</p>
+      <span class="tag">3-von-3 Gate</span>
+    </div>
+    <div class="card">
+      <div class="icon">🧭</div>
+      <h4>Explorer-Agent</h4>
+      <p>Durchsucht die Codebasis, findet Dateien, versteht Zusammenhänge. Schneller als manuelles Navigieren.</p>
+      <span class="tag blue">Codebase · Navigation</span>
+    </div>
+    <div class="card">
+      <div class="icon">🏋️</div>
+      <h4>Coach-Agent</h4>
+      <p>Persönlicher Produktivitäts-Coach. Priorisierung, Fokus, Selbstorganisation. Neurodivergenz-bewusst, direktes Feedback.</p>
+      <span class="tag">Produktivität · Fokus</span>
+    </div>
+  </div>
+
+  <h3>3-von-3 Quality Gate</h3>
+  <div class="arch-diagram">
+    <div class="flow">
+      <div class="flow-step">
+        <div class="step-icon">📄</div>
+        <div class="step-name">Output</div>
+      </div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-step" style="border-color: var(--green);">
+        <div class="step-icon">✅</div>
+        <div class="step-name">QA #1</div>
+      </div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-step" style="border-color: var(--green);">
+        <div class="step-icon">✅</div>
+        <div class="step-name">QA #2</div>
+      </div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-step" style="border-color: var(--green);">
+        <div class="step-icon">✅</div>
+        <div class="step-name">QA #3</div>
+      </div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-step" style="border-color: var(--yellow);">
+        <div class="step-icon">🏁</div>
+        <div class="step-name">Release</div>
+        <div class="step-detail">Nur wenn 3/3</div>
+      </div>
+    </div>
+    <p style="text-align: center; margin-top: 1rem; color: var(--text-muted); font-size: 0.85rem;">
+      Drei unabhängige QA-Agenten prüfen denselben Output. Alle drei müssen bestehen.
+      Ein Veto = Überarbeitung. Kein "Mehrheitsentscheid" bei Qualität.
+    </p>
+  </div>
+</section>
+
+<!-- 9. KNOWLEDGE LOOP -->
+<section id="loop">
+  <h2>Knowledge <span>Loop</span></h2>
+  <div class="sep"></div>
+  <p class="section-intro">
+    Der Mechanismus der eigenständigen Weiterentwicklung.
+    Jede Session macht das System besser. Nicht weil jemand es trainiert,
+    sondern weil die Architektur Lernen erzwingt.
+  </p>
+
+  <div class="ring-container">
+    <div class="ring">
+      <div class="ring-center">Knowledge<br>Loop</div>
+      <div class="ring-item pos-top" style="border-color: var(--green);">
+        <strong>1. Session</strong><br>Arbeit + Kontext
+      </div>
+      <div class="ring-item pos-tr" style="border-color: var(--blue);">
+        <strong>2. Destillation</strong><br>Wissen extrahieren
+      </div>
+      <div class="ring-item pos-right" style="border-color: var(--purple);">
+        <strong>3. Storage</strong><br>In Deep Storage schreiben
+      </div>
+      <div class="ring-item pos-bottom" style="border-color: var(--orange);">
+        <strong>4. Export</strong><br>Notes → Dokumente
+      </div>
+      <div class="ring-item pos-bl" style="border-color: var(--yellow);">
+        <strong>5. Reindex</strong><br>Search Engine aktualisieren
+      </div>
+      <div class="ring-item pos-left" style="border-color: var(--green);">
+        <strong>→ Nächste Session</strong><br>Besserer Kontext
+      </div>
+    </div>
+  </div>
+
+  <div class="card-grid">
+    <div class="card">
+      <h4>Wie es funktioniert</h4>
+      <p>Am Ende jeder Session wird destilliert: Was wurde gelernt? Welche Fehler wurden gemacht? Welche Entscheidungen getroffen? Das Ergebnis geht in Deep Storage. Ein Export-Script wandelt Notes in durchsuchbare Dokumente um. Die Search Engine reindexiert. Die nächste Session hat automatisch mehr Kontext.</p>
+    </div>
+    <div class="card">
+      <h4>Warum es funktioniert</h4>
+      <p>Weil es nicht optional ist. Hooks erzwingen das Speichern. Pre-Compact sichert vor Kontextverlust. Session-Stop triggert den Export. Das System vergisst nicht, weil das Vergessen architektonisch verhindert wird.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 10. SCOPE ISOLATION -->
+<section id="scope">
+  <h2>Scope <span>Isolation</span></h2>
+  <div class="sep"></div>
+  <p class="section-intro">
+    Verschiedene Kontexte brauchen verschiedene Daten.
+    Arbeitsdaten dürfen nicht in private Projekte fliessen und umgekehrt.
+    Aber ein persönlicher Coach braucht das Gesamtbild.
+  </p>
+
+  <div class="scope-grid">
+    <div class="scope-box scope-work">
+      <div class="scope-icon">🏢</div>
+      <h4 style="color: var(--blue);">Arbeit</h4>
+      <p>Isolierte Datenbank. Eigenes Hot Memory, eigener Deep Storage, eigene Search Engine. Keine Kreuz-Kontamination.</p>
+    </div>
+    <div class="scope-box scope-private">
+      <div class="scope-icon">🏠</div>
+      <h4 style="color: var(--purple);">Privat</h4>
+      <p>Komplett getrennte Infrastruktur. Andere Pfade, andere Daten, andere Regeln. Zugriff nur aus privatem Kontext.</p>
+    </div>
+    <div class="scope-box scope-coach">
+      <div class="scope-icon">🧭</div>
+      <h4 style="color: var(--green);">Coach</h4>
+      <p>Einziger Cross-Scope-Zugriff. Liest beide Welten, weil Produktivität nicht an der Arbeit/Privat-Grenze endet.</p>
+    </div>
+    <div class="scope-bridge">
+      Coach hat Lesezugriff auf beide Scopes → Ganzheitliche Beratung ohne Datenvermischung
+    </div>
+  </div>
+</section>
+
+<!-- 11. LESSONS LEARNED -->
+<section id="lessons">
+  <h2>Lessons <span>Learned</span></h2>
+  <div class="sep"></div>
+  <p class="section-intro">
+    Was nicht funktioniert hat, ist wertvoller als was funktioniert.
+    Hier sind die teuren Erkenntnisse aus 6 Monaten Entwicklung.
+  </p>
+
+  <div class="lesson">
+    <div class="lesson-icon">❌</div>
+    <div class="lesson-content">
+      <h4>"Ein Vector Store reicht"</h4>
+      <p>Drei Prototypen gebaut, alle mit reiner Vector Search. Fachbegriffe gingen verloren, Abkürzungen wurden nicht gefunden, aktuelle Dokumente hatten kein höheres Gewicht als veraltete. Die Lösung war nicht ein besseres Embedding-Modell, sondern ein komplett anderer Ansatz: Hybrid.</p>
+    </div>
+  </div>
+
+  <div class="lesson">
+    <div class="lesson-icon">❌</div>
+    <div class="lesson-content">
+      <h4>"LLMs validieren sich selbst"</h4>
+      <p>Falsch. Ein LLM das seine eigenen Aussagen prüft, bestätigt sich selbst. Validation braucht externe Checks: Existiert die Datei? Stimmt der Fachbegriff? Widerspricht das dem bestehenden Wissen? Erst als die 6 Gates implementiert waren, sank die Fehlerquote messbar.</p>
+    </div>
+  </div>
+
+  <div class="lesson">
+    <div class="lesson-icon">❌</div>
+    <div class="lesson-content">
+      <h4>"Cloud-First ist immer besser"</h4>
+      <p>Für Klassifikation und Routing ist ein lokales 3B-Modell schneller, billiger und datenschutzkonformer als ein API-Call. Die Erkenntnis: Cloud für Komplexes, lokal für Schnelles. Nicht entweder-oder, sondern beides strategisch einsetzen.</p>
+    </div>
+  </div>
+
+  <div class="lesson">
+    <div class="lesson-icon">❌</div>
+    <div class="lesson-content">
+      <h4>"Mehr Kontext = bessere Antworten"</h4>
+      <p>200k Token Kontextfenster vollstopfen macht Antworten nicht besser, sondern langsamer und teurer. Die Lösung: Schichtung. Nur das Nötigste automatisch laden (Hot Memory), den Rest on-demand suchen (Deep Storage + Semantic Search).</p>
+    </div>
+  </div>
+
+  <div class="lesson">
+    <div class="lesson-icon">❌</div>
+    <div class="lesson-content">
+      <h4>"Theoretische Frameworks beeindrucken"</h4>
+      <p>Content-Validierung via LinkedIn: Ein Post über theoretische KI-Frameworks bekam 40 Impressions. Ein Post über konkrete Architektur-Erkenntnisse bekam 1.755+. Praxis schlägt Theorie 24:1. Immer.</p>
+    </div>
+  </div>
+
+  <div class="lesson">
+    <div class="lesson-icon">✅</div>
+    <div class="lesson-content">
+      <h4>"Policy as Code statt Dokumentation"</h4>
+      <p>Regeln in Dokumenten werden vergessen. Regeln als Hooks werden erzwungen. Email-Versand ohne Freigabe? Automatisch blockiert. Datei löschen? Hook verhindert es. Das System braucht keine Disziplin, weil die Architektur Fehler verhindert.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 12. CHALLENGES -->
+<section id="challenges">
+  <h2>Offene <span>Challenges</span></h2>
+  <div class="sep"></div>
+  <p class="section-intro">
+    Kein System ist fertig. Diese Probleme sind noch nicht gelöst.
+    Transparenz über offene Flanken ist wichtiger als der Anschein von Perfektion.
+  </p>
+
+  <div class="challenge-grid">
+    <div class="challenge crit-high">
+      <h4>Single Point of Failure</h4>
+      <p>Das gesamte System läuft auf einer Maschine. Kein Backup-Server, kein Failover. Ein Hardware-Ausfall bedeutet Stillstand.</p>
+      <div class="crit-label" style="color: var(--highlight);">Kritisch</div>
+    </div>
+    <div class="challenge crit-high">
+      <h4>Bus Factor = 1</h4>
+      <p>Eine Person kennt das System. Keine Dokumentation die ausreicht um es zu betreiben. Dieses Dokument ist ein erster Schritt.</p>
+      <div class="crit-label" style="color: var(--highlight);">Kritisch</div>
+    </div>
+    <div class="challenge crit-med">
+      <h4>Validation noch nicht automatisiert</h4>
+      <p>Die 6 Gates existieren als Konzept und werden manuell angewendet. Eine vollautomatische Pipeline fehlt noch.</p>
+      <div class="crit-label" style="color: var(--yellow);">In Arbeit</div>
+    </div>
+    <div class="challenge crit-med">
+      <h4>Skalierung unklar</h4>
+      <p>Das System funktioniert für eine Person. Ob und wie es für ein Team skaliert, ist noch nicht getestet. Multi-User-Szenarien sind konzeptionell durchdacht, aber nicht implementiert.</p>
+      <div class="crit-label" style="color: var(--yellow);">Offen</div>
+    </div>
+    <div class="challenge crit-low">
+      <h4>Embedding-Modell fixiert</h4>
+      <p>multilingual-e5-base funktioniert gut, aber ein Upgrade auf ein besseres Modell würde einen kompletten Reindex erfordern. Hot-Swap ist nicht möglich.</p>
+      <div class="crit-label" style="color: var(--green);">Akzeptiert</div>
+    </div>
+    <div class="challenge crit-low">
+      <h4>Kosten-Monitoring rudimentär</h4>
+      <p>API-Kosten werden nicht systematisch getrackt. Bei steigender Nutzung könnte das zum Problem werden.</p>
+      <div class="crit-label" style="color: var(--green);">Niedrig</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p style="font-size: 1.1rem; color: var(--text); margin-bottom: 1rem;">
+    Ein Experiment das funktioniert.
+  </p>
+  <p>
+    <strong style="color: var(--green);">Holger Wölfle</strong><br>
+    Privates Forschungsprojekt, 2025–2026<br><br>
+    Dieses Projekt ist privat entstanden, aus persönlichem Interesse an KI-Architektur.<br>
+    Kein Framework, kein Produkt. Ein Experiment das funktioniert.<br><br>
+    <a href="https://www.linkedin.com/in/holgerwoelfle/">LinkedIn</a> ·
+    Fragen, Feedback, eigene Erfahrungen? Gerne per DM.
+  </p>
+  <p style="margin-top: 2rem; font-size: 0.75rem; color: #555;">
+    Stand: März 2026 · Dieses Dokument wird aktiv weiterentwickelt
+  </p>
+</footer>
+
+</body>
+</html>
