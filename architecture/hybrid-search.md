@@ -16,6 +16,39 @@ Pure Vector Search versagt bei internen Fachbegriffen, Abkuerzungen und Projektn
 
 Empirisch ermittelt. 80/20 gewichtete den BM25-Anteil zu schwach (Fachbegriffe gingen unter). 50/50 ueberbetonte exakte Matches auf Kosten semantischer Relevanz. 70/30 war der Sweet Spot fuer gemischte Queries (natuerlichsprachig + Fachbegriffe).
 
+### Score-Normalisierung: der Schritt, ohne den die Gewichtung nichts bedeutet
+
+Die beiden Arme liefern nicht vergleichbare Zahlen. Cosine-Aehnlichkeit liegt
+zwischen 0 und 1, BM25 ist nach oben offen und haengt von Korpus- und
+Query-Statistik ab. Wer beide ungewichtet addiert, bekommt kein 70/30, sondern
+ein Mischungsverhaeltnis, das je Query schwankt. Die Gewichtung waere dann kein
+Designparameter, sondern Zufall.
+
+Vor der Fusion wird der BM25-Arm deshalb auf denselben Wertebereich gebracht.
+Zwei Wege, beide im Einsatz:
+
+- **Min-Max ueber die Trefferliste** der aktuellen Query, oder
+- **Division durch einen festen Normierungsfaktor** mit Deckelung bei 1,
+  `min(bm25 / bm25_norm_factor, 1.0)`.
+
+Erst danach gilt `score = vec_weight * vec + bm25_weight * bm25`.
+
+### Stand der Implementierung (August 2026)
+
+Die Abschnitte oben beschreiben die Herleitung von Maerz 2026. Der laufende
+Stand weicht davon ab:
+
+| Parameter | Dokumentiert oben | Laufender Stand |
+|---|---|---|
+| Vector / BM25 | 70 / 30 | **90 / 10** |
+| BM25 k1 / b | nicht genannt | 2.62 / 0.62 |
+| Normierungsfaktor | nicht genannt | 9.74 |
+| Phrase-Bonus | qualitativ | Faktor 1.64 |
+
+Der BM25-Anteil wird nicht getrennt konfiguriert, sondern als
+`1.0 - vec_weight` abgeleitet. Ein zusaetzlich gesetztes Gewichtsfeld bleibt
+deshalb wirkungslos.
+
 ## Temporal Decay
 
 ### Problem
@@ -49,6 +82,26 @@ Bestimmte Dokumenttypen sind zeitlos und werden vom Decay ausgenommen:
 - Prozess-Definitionen
 
 Markierung erfolgt per Metadaten im Dokument oder per Pfad-Regel (z.B. alles unter `/rules/` ist Evergreen).
+
+### Vom Schalter zur Skala (Stand August 2026)
+
+Die binaere Aufteilung oben, Decay an oder aus, hat sich als zu grob erwiesen.
+Der laufende Stand kennt vier Zerfallsklassen, jede mit eigener Halbwertszeit
+und einem Boden, unter den der Score nicht faellt:
+
+| Klasse | Halbwertszeit | Boden |
+|---|---|---|
+| ephemeral | 14 Tage | 0.05 |
+| standard | 90 Tage | 0.10 |
+| strategic | 365 Tage | 0.30 |
+| permanent | kein Zerfall | 1.00 |
+
+Die Zuordnung geschieht automatisch: ueber den Dokumenttyp (Logs werden
+ephemeral, Konfigurationen permanent) und ueber Schlagworte (Strategie,
+Vertrag, Architektur, Frist, Entscheidung heben nach strategic; Identitaet,
+Relation, Adresse heben nach permanent). Der Boden ist der eigentliche
+Unterschied zur Evergreen-Ausnahme: ein altes Dokument verschwindet nicht,
+es rutscht nur nach unten.
 
 ## Embedding-Modell
 

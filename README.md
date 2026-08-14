@@ -5,7 +5,9 @@
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19357818.svg)](https://doi.org/10.5281/zenodo.19357818)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A self-improving knowledge architecture for AI agents. 3 memory layers, hybrid search, automated validation, multi-LLM orchestration. No framework, no vendor lock-in. SQLite, Python, open-source models.
+A self-improving knowledge architecture for AI agents. 3 memory layers, hybrid search, automated validation, multi-LLM orchestration. No framework. SQLite, Python, open-source models.
+
+**Scope of portability.** The model layer is vendor-neutral: swap the embedding model, swap the LLM, nothing else changes. The orchestration layer is not. Five components (Hook System, Timestamp Hook, Incremental Extraction, and the automatic parts of Knowledge Loop and Scope Isolation) assume a host that fires the session lifecycle events `SessionStart`, `UserPromptSubmit`, `PreToolUse`, `PreCompact` and `Stop`. That is the hook API of one product, Claude Code. No portable contract for those events exists yet, so treat this as a reference architecture implemented on Claude Code, not as a drop-in design for any agent stack. Hybrid Search, Dual Decay and the deterministic validation gates carry no such dependency.
 
 **Paper:** [Epistemic Validation in AI Knowledge Systems](https://zenodo.org/records/19357818) (Zenodo, 2026) — DOI: 10.5281/zenodo.19357818
 
@@ -29,7 +31,7 @@ Each component in `architecture/` is a standalone document. Start with the overv
 | Component | Description | Document |
 |---|---|---|
 | 3-Layer Memory | Hot Memory, Deep Storage, Semantic Search | [architecture/3-layer-memory.md](architecture/3-layer-memory.md) |
-| Hybrid Search | 70% Vector + 30% BM25, Temporal Decay | [architecture/hybrid-search.md](architecture/hybrid-search.md) |
+| Hybrid Search | Weighted vector/BM25 fusion, temporal decay | [architecture/hybrid-search.md](architecture/hybrid-search.md) |
 | Hook System | 5-stage Session Lifecycle | [architecture/hook-system.md](architecture/hook-system.md) |
 | Validation Layer | 7 Gates, Zero Trust on Agent Knowledge | [architecture/validation-layer.md](architecture/validation-layer.md) |
 | Knowledge Loop | Self-Improving Knowledge Cycle | [architecture/knowledge-loop.md](architecture/knowledge-loop.md) |

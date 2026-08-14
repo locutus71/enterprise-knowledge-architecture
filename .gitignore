@@ -11,3 +11,6 @@ USAGE-LOG.md.bak-*
 # Gehoeren nicht in die oeffentliche Architektur-Referenz.
 podcast_*
 notebooklm_*
+
+# Ergebnisse und Payloads der Kimi-Gegenprobe, lokal
+_kimi_*
