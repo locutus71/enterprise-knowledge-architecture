@@ -5,3 +5,9 @@ Thumbs.db
 *~
 .env
 USAGE-LOG.md
+USAGE-LOG.md.bak-*
+
+# Interne Produktionsunterlagen der Podcast-Reihe "System 2".
+# Gehoeren nicht in die oeffentliche Architektur-Referenz.
+podcast_*
+notebooklm_*

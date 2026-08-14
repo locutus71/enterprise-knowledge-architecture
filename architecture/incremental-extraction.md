@@ -32,7 +32,7 @@ Ein Python-Script analysiert die FactsDB und findet Verknuepfungen durch:
 - **IP-Matching:** Wenn ein Value eine IP enthaelt, die einer anderen Entity gehoert
 - **DNS-Referenzen:** Geraete die einen bestimmten DNS-Server nutzen
 - **Entity-Referenzen:** Wenn ein Value den Namen einer bekannten Entity enthaelt
-- **Namens-Prefixe:** "Felix Laptop" gehoert zu "Felix Woelfle"
+- **Namens-Prefixe:** "Laptop Alice" gehoert zur Entity "Alice"
 - **Finanz-Verknuepfungen:** Versicherungs- und Eigentumsbeziehungen
 
 UPSERT-Logik verhindert Duplikate bei wiederholter Ausfuehrung.
