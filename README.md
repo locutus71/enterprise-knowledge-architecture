@@ -40,6 +40,8 @@ Each component in `architecture/` is a standalone document. Start with the overv
 | Timestamp Hook | Time Awareness for AI Agents | [architecture/timestamp-hook.md](architecture/timestamp-hook.md) |
 | Incremental Extraction | PreCompact hook saves knowledge before context loss | [architecture/incremental-extraction.md](architecture/incremental-extraction.md) |
 | Dual Decay | Usage-based decay complements time-based decay | [architecture/dual-decay.md](architecture/dual-decay.md) |
+| Harness Evolution | Gate 8, reference trajectories, snapshot pool for harness changes (concept) | [architecture/harness-evolution.md](architecture/harness-evolution.md) |
+| Host Portability | Swap model or host, keep the knowledge layer: MCP + adapter contract (concept) | [architecture/host-portability.md](architecture/host-portability.md) |
 
 ## Interactive Documentation
 
