@@ -40,6 +40,7 @@ Each component in `architecture/` is a standalone document. Start with the overv
 | Timestamp Hook | Time Awareness for AI Agents | [architecture/timestamp-hook.md](architecture/timestamp-hook.md) |
 | Incremental Extraction | PreCompact hook saves knowledge before context loss | [architecture/incremental-extraction.md](architecture/incremental-extraction.md) |
 | Dual Decay | Usage-based decay complements time-based decay | [architecture/dual-decay.md](architecture/dual-decay.md) |
+| Single Source of Truth | One home per information type, references elsewhere (concept) | [architecture/single-source-of-truth.md](architecture/single-source-of-truth.md) |
 
 ## Interactive Documentation
 

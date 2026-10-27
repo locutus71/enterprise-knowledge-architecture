@@ -122,6 +122,7 @@ Technisch realisierbar ueber parallele API-Calls an verschiedene Anbieter. Die S
 - **Temporal Decay** filtert altes Wissen (zeitbasiert)
 - **Validation Layer** filtert falsches Wissen (qualitaetsbasiert)
 - **3-von-3 Quality Gate** prueft Output vor Auslieferung an den User
+- **Home-Check** ([Single Source of Truth](single-source-of-truth.md)) prueft, ob eine Information an diesen Ort gehoert oder nur als Verweis gespeichert wird (Konzept)
 - Zusammen: Dreifache Absicherung gegen Knowledge Corruption
 
 ---
